@@ -878,10 +878,12 @@ Device::BuiltinAction start_recovery(Device* device, const std::vector<std::stri
   // Extract the YYYYMMDD / YYYYMMDD_HHMMSS timestamp from the full version string.
   // Assume the first instance of "-[0-9]{8}-", or "-[0-9]{8}_[0-9]{6}-" in case
   // LINEAGE_VERSION_APPEND_TIME_OF_DAY is set to true has the desired date.
-  std::string ver = android::base::GetProperty("ro.modversion", "");
+  std::string ver = android::base::GetProperty("ro.pm.recovery.version", "");
+  std::string ver_date = android::base::GetProperty("ro.system.build.version.release_or_codename", "");  // Empty if no match.
 
   std::vector<std::string> title_lines = {
-    "Version " + getProcessedVersion(),
+    android::base::GetProperty("ro.pm.recovery.version", "(unknown)") +
+        " (" + ver_date + ")",
   };
   title_lines.push_back("Product name - " + android::base::GetProperty("ro.product.device", ""));
   if (android::base::GetBoolProperty("ro.build.ab_update", false)) {
